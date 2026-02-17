@@ -25,7 +25,7 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
   // 🔥 URL base del backend (sin /api)
   const API_BASE_URL = 
 
-    import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:3000";
+    const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     loadArchivos();
