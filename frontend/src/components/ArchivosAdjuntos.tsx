@@ -22,6 +22,11 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
   const [mensaje, setMensaje] = useState<{ tipo: 'success' | 'error', texto: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // 🔥 URL base del backend (sin /api)
+  const API_BASE_URL = 
+
+    import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:3000";
+
   useEffect(() => {
     loadArchivos();
   }, [solicitudId]);
@@ -37,24 +42,30 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
 
   const handleUpload = async (file: File) => {
     if (!file) return;
+
     if (file.size > 10 * 1024 * 1024) {
       setMensaje({ tipo: 'error', texto: 'El archivo no puede superar 10MB' });
       setTimeout(() => setMensaje(null), 3000);
       return;
     }
+
     const allowed = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
     if (!allowed.includes(file.type)) {
       setMensaje({ tipo: 'error', texto: 'Solo se permiten imágenes y PDFs' });
       setTimeout(() => setMensaje(null), 3000);
       return;
     }
+
     setIsUploading(true);
+
     try {
       const formData = new FormData();
       formData.append('archivo', file);
+
       await apiClient.post(`/solicitudes/${solicitudId}/archivos`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+
       setMensaje({ tipo: 'success', texto: 'Archivo subido correctamente' });
       await loadArchivos();
     } catch (error: any) {
@@ -73,12 +84,14 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
     } catch (error) {
       setMensaje({ tipo: 'error', texto: 'Error al eliminar archivo' });
     }
+
     setTimeout(() => setMensaje(null), 3000);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
+
     const file = e.dataTransfer.files[0];
     if (file) handleUpload(file);
   };
@@ -140,20 +153,49 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
 
   return (
     <div style={cardStyle}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg, #1e3a8a, #3b82f6)' }}></div>
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '3px',
+          background: 'linear-gradient(90deg, #1e3a8a, #3b82f6)',
+        }}
+      ></div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h3 style={{ margin: 0, color: 'white', fontSize: '15px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <h3
+          style={{
+            margin: 0,
+            color: 'white',
+            fontSize: '15px',
+            fontWeight: '700',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2">
             <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
           </svg>
           Archivos Adjuntos
           {archivos.length > 0 && (
-            <span style={{ background: 'rgba(59,130,246,0.2)', color: '#60a5fa', padding: '2px 8px', borderRadius: '10px', fontSize: '12px', fontWeight: '700' }}>
+            <span
+              style={{
+                background: 'rgba(59,130,246,0.2)',
+                color: '#60a5fa',
+                padding: '2px 8px',
+                borderRadius: '10px',
+                fontSize: '12px',
+                fontWeight: '700',
+              }}
+            >
               {archivos.length}
             </span>
           )}
         </h3>
+
         {canUpload && (
           <button
             onClick={() => fileInputRef.current?.click()}
@@ -183,16 +225,20 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
       </div>
 
       {mensaje && (
-        <div style={{
-          padding: '10px 16px',
-          borderRadius: '8px',
-          fontSize: '13px',
-          fontWeight: '600',
-          marginBottom: '16px',
-          background: mensaje.tipo === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
-          border: `1px solid ${mensaje.tipo === 'success' ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`,
-          color: mensaje.tipo === 'success' ? '#34d399' : '#f87171',
-        }}>
+        <div
+          style={{
+            padding: '10px 16px',
+            borderRadius: '8px',
+            fontSize: '13px',
+            fontWeight: '600',
+            marginBottom: '16px',
+            background: mensaje.tipo === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+            border: `1px solid ${
+              mensaje.tipo === 'success' ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'
+            }`,
+            color: mensaje.tipo === 'success' ? '#34d399' : '#f87171',
+          }}
+        >
           {mensaje.texto}
         </div>
       )}
@@ -212,7 +258,10 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
       {canUpload && (
         <div
           onDrop={handleDrop}
-          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragOver(true);
+          }}
           onDragLeave={() => setDragOver(false)}
           onClick={() => fileInputRef.current?.click()}
           style={{
@@ -226,11 +275,20 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
             transition: 'all 0.3s',
           }}
         >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(59,130,246,0.5)" strokeWidth="1.5" style={{ margin: '0 auto 8px', display: 'block' }}>
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="rgba(59,130,246,0.5)"
+            strokeWidth="1.5"
+            style={{ margin: '0 auto 8px', display: 'block' }}
+          >
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="17 8 12 3 7 8" />
             <line x1="12" y1="3" x2="12" y2="15" />
           </svg>
+
           <p style={{ margin: 0, color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>
             Arrastrá un archivo o <span style={{ color: '#60a5fa' }}>hacé click</span>
           </p>
@@ -244,21 +302,23 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {archivos.map((archivo) => (
             <div key={archivo.id} style={archivoRowStyle}>
-              <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                flexShrink: 0,
-                background: 'rgba(30,41,59,0.8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px solid rgba(59,130,246,0.2)',
-              }}>
+              <div
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  flexShrink: 0,
+                  background: 'rgba(30,41,59,0.8)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1px solid rgba(59,130,246,0.2)',
+                }}
+              >
                 {isImage(archivo.tipo) ? (
                   <img
-                    src={`http://localhost:3000${archivo.url}`}
+                    src={`${API_BASE_URL}${archivo.url}`}
                     alt={archivo.nombre}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
@@ -271,7 +331,17 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
               </div>
 
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ margin: 0, color: 'white', fontSize: '13px', fontWeight: '600', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <p
+                  style={{
+                    margin: 0,
+                    color: 'white',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   {archivo.nombre}
                 </p>
                 <p style={{ margin: '2px 0 0 0', color: 'rgba(255,255,255,0.4)', fontSize: '11px' }}>
@@ -282,7 +352,7 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
               <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                 {canDownload ? (
                   <a
-                    href={`http://localhost:3000${archivo.url}`}
+                    href={`${API_BASE_URL}${archivo.url}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={btnVerStyle}
@@ -309,6 +379,7 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
                     <span>Pendiente de pago.</span>
                   </div>
                 )}
+
                 {canUpload && (
                   <button onClick={() => handleEliminar(archivo.id)} style={btnEliminarStyle}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
