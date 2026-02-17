@@ -19,7 +19,7 @@ COPY . .
 RUN npx prisma generate
 
 # Compilar la aplicación
-RUN npm run build && ls -la dist/
+RUN npm run build
 
 EXPOSE 3000
 
