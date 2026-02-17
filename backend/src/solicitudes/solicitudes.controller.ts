@@ -1,13 +1,13 @@
-
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Param, 
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Body,
+  Param,
   Query,
-  UseGuards, 
-  Request 
+  UseGuards,
+  Request
 } from '@nestjs/common';
 import { SolicitudesService } from './solicitudes.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -45,5 +45,25 @@ export class SolicitudesController {
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req) {
     return this.solicitudesService.findOne(id, req.user.id, req.user.rol);
+  }
+
+  @Patch(':id/iniciar-revision')
+  iniciarRevision(@Param('id') id: string, @Request() req) {
+    return this.solicitudesService.iniciarRevision(id, req.user.id);
+  }
+
+  @Patch(':id/aprobar')
+  aprobar(@Param('id') id: string, @Request() req) {
+    return this.solicitudesService.aprobar(id, req.user.id);
+  }
+
+  @Patch(':id/rechazar')
+  rechazar(@Param('id') id: string, @Body() body: any, @Request() req) {
+    return this.solicitudesService.rechazar(id, req.user.id, body.observacionesRechazo);
+  }
+
+  @Patch(':id/emitir')
+  emitir(@Param('id') id: string, @Request() req) {
+    return this.solicitudesService.emitir(id, req.user.id);
   }
 }

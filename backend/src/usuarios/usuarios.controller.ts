@@ -1,27 +1,24 @@
-import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../common/decorators/roles.decorator';
 
 @Controller('usuarios')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtAuthGuard)
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Get()
-  findAll(@Query() filters: any) {
-    return this.usuariosService.findAll(filters);
+  findAll(@Request() req) {
+    return this.usuariosService.findAll(req.user.rol);
   }
 
   @Post()
-  create(@Body() body: any) {
-    return this.usuariosService.create(body);
+  create(@Body() body: any, @Request() req) {
+    return this.usuariosService.create(body, req.user.rol);
   }
 
-  @Patch(':id/toggle-activo')
-  toggleActivo(@Param('id') id: string) {
-    return this.usuariosService.toggleActivo(id);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() body: any, @Request() req) {
+    return this.usuariosService.update(id, body, req.user.rol);
   }
 }

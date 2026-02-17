@@ -10,7 +10,9 @@ import { DetalleSolicitud } from './pages/ciudadano/DetalleSolicitud';
 import { useAuth } from './hooks/useAuth';
 import { DashboardInterno } from './pages/interno/DashboardInterno';
 import { TodasSolicitudes } from './pages/interno/TodasSolicitudes';
-
+import { GestionarSolicitud } from './pages/interno/GestionarSolicitud';
+import { GestionUsuarios } from './pages/interno/GestionUsuarios';
+import { Register } from './pages/auth/Register';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -40,6 +42,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/dashboard"
@@ -57,6 +60,22 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+  path="/interno/solicitudes/:id"
+  element={
+    <ProtectedRoute>
+      <GestionarSolicitud />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/interno/usuarios"
+  element={
+    <ProtectedRoute>
+      <GestionUsuarios />
+    </ProtectedRoute>
+  }
+/>
           <Route
             path="/mis-solicitudes"
             element={

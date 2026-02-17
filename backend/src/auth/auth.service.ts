@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -8,13 +9,13 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private emailService: EmailService,
   ) {}
 
   async register(data: any) {
     const existingUser = await this.prisma.usuario.findUnique({
       where: { email: data.email },
     });
-
     if (existingUser) {
       throw new ConflictException('El email ya está registrado');
     }
@@ -23,7 +24,6 @@ export class AuthService {
       const existingCuil = await this.prisma.usuario.findUnique({
         where: { cuil: data.cuil },
       });
-
       if (existingCuil) {
         throw new ConflictException('El CUIL ya está registrado');
       }
@@ -50,6 +50,9 @@ export class AuthService {
       },
     });
 
+    // Email de bienvenida automático
+    await this.emailService.enviarBienvenida(user);
+
     return {
       success: true,
       data: user,
@@ -58,16 +61,13 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await this.prisma.usuario.findUnique({
-      where: { email },
-    });
+    const user = await this.prisma.usuario.findUnique({ where: { email } });
 
     if (!user || !user.activo) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-
     if (!isPasswordValid) {
       throw new UnauthorizedException('Credenciales inválidas');
     }

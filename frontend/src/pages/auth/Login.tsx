@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login, isAuthenticated, user } = useAuth();
+  const { login, isAuthenticated, user } = useAuth()
+  const navigate = useNavigate();;
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -347,11 +349,24 @@ export const Login: React.FC = () => {
             >
               {isLoading ? 'INICIANDO...' : 'INICIAR SESIÓN'}
             </button>
-          </form>
+     </form>
 
-          {/* Usuarios de prueba */}
-          <div style={{
-            marginTop: '20px',
+            {/* Link al registro */}
+            <p style={{ margin: '16px 0 0 0', textAlign: 'center', color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>
+              ¿No tenés cuenta?{' '}
+              <span
+                onClick={() => navigate('/register')}
+                style={{ color: '#60a5fa', cursor: 'pointer', fontWeight: '600' }}
+                onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none'; }}
+              >
+                Registrate
+              </span>
+            </p>
+
+            {/* Usuarios de prueba */}
+            <div style={{
+              marginTop: '20px',
             padding: '14px',
             background: 'rgba(30, 41, 59, 0.4)',
             borderRadius: '10px',
