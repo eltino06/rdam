@@ -1,0 +1,229 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { solicitudesApi } from '../../api/solicitudes.api';
+
+export const MisSolicitudes: React.FC = () => {
+  const [solicitudes, setSolicitudes] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    loadSolicitudes();
+  }, []);
+
+  const loadSolicitudes = async () => {
+    try {
+      const response = await solicitudesApi.getMisSolicitudes();
+      setSolicitudes(response.data);
+    } catch (error) {
+      console.error('Error cargando solicitudes:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      {/* Header */}
+      <div style={{
+        background: 'white',
+        padding: '20px 40px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '24px', color: '#333' }}>🏛️ RDAM</h1>
+          <p style={{ margin: '5px 0 0 0', color: '#666', fontSize: '14px' }}>
+            {user?.nombreCompleto}
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            onClick={() => navigate('/dashboard')}
+            style={{
+              padding: '10px 20px',
+              background: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+            }}
+          >
+            ← Dashboard
+          </button>
+          <button
+            onClick={logout}
+            style={{
+              padding: '10px 20px',
+              background: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+            }}
+          >
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div style={{ padding: '40px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+          <h2 style={{ margin: 0, color: '#333' }}>Mis Solicitudes</h2>
+          <button
+            onClick={() => navigate('/solicitudes/nueva')}
+            style={{
+              padding: '12px 24px',
+              background: '#667eea',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+            }}
+          >
+            ➕ Nueva Solicitud
+          </button>
+        </div>
+
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '40px' }}>
+            <p>Cargando...</p>
+          </div>
+        ) : solicitudes.length === 0 ? (
+          <div style={{
+            background: 'white',
+            padding: '60px',
+            borderRadius: '10px',
+            textAlign: 'center',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          }}>
+            <div style={{ fontSize: '48px', marginBottom: '20px' }}>📋</div>
+            <h3 style={{ color: '#666', marginBottom: '10px' }}>No tienes solicitudes</h3>
+            <p style={{ color: '#999', marginBottom: '30px' }}>Crea tu primera solicitud para comenzar</p>
+            <button
+              onClick={() => navigate('/solicitudes/nueva')}
+              style={{
+                padding: '14px 28px',
+                background: '#667eea',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '16px',
+              }}
+            >
+              Crear Primera Solicitud
+            </button>
+          </div>
+        ) : (
+          <div style={{
+            background: 'white',
+            borderRadius: '10px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            overflow: 'hidden',
+          }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead style={{ background: '#f8f9fa' }}>
+                <tr>
+                  <th style={{ padding: '15px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase' }}>
+                    Número
+                  </th>
+                  <th style={{ padding: '15px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase' }}>
+                    Tipo
+                  </th>
+                  <th style={{ padding: '15px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase' }}>
+                    Estado
+                  </th>
+                  <th style={{ padding: '15px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase' }}>
+                    Fecha
+                  </th>
+                  <th style={{ padding: '15px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase' }}>
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {solicitudes.map((solicitud) => (
+                  <tr key={solicitud.id} style={{ borderBottom: '1px solid #eee' }}>
+                    <td style={{ padding: '15px 20px', fontWeight: 'bold' }}>
+                      {solicitud.numeroSolicitud}
+                    </td>
+                    <td style={{ padding: '15px 20px' }}>
+                      {solicitud.tipoCertificado}
+                    </td>
+                    <td style={{ padding: '15px 20px' }}>
+                      <span style={{
+                        padding: '5px 12px',
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        background: getEstadoColor(solicitud.estado),
+                        color: 'white',
+                      }}>
+                        {getEstadoTexto(solicitud.estado)}
+                      </span>
+                    </td>
+                    <td style={{ padding: '15px 20px' }}>
+                      {new Date(solicitud.fechaCreacion).toLocaleDateString('es-AR')}
+                    </td>
+                    <td style={{ padding: '15px 20px' }}>
+                      <button
+                        onClick={() => navigate(`/solicitudes/${solicitud.id}`)}
+                        style={{
+                          padding: '8px 16px',
+                          background: '#667eea',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '5px',
+                          cursor: 'pointer',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Ver
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+function getEstadoColor(estado: string): string {
+  const colors: any = {
+    PENDIENTE_REVISION: '#ffc107',
+    EN_REVISION: '#17a2b8',
+    APROBADA: '#28a745',
+    RECHAZADA: '#dc3545',
+    PENDIENTE_PAGO: '#ffc107',
+    PAGADA: '#28a745',
+    EMITIDA: '#007bff',
+  };
+  return colors[estado] || '#6c757d';
+}
+
+function getEstadoTexto(estado: string): string {
+  const textos: any = {
+    PENDIENTE_REVISION: 'Pendiente Revisión',
+    EN_REVISION: 'En Revisión',
+    APROBADA: 'Aprobada',
+    RECHAZADA: 'Rechazada',
+    PENDIENTE_PAGO: 'Pendiente Pago',
+    PAGADA: 'Pagada',
+    EMITIDA: 'Emitida',
+  };
+  return textos[estado] || estado;
+}

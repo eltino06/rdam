@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: rdam-postgres
+    environment:
+      POSTGRES_USER: rdam_user
+      POSTGRES_PASSWORD: rdam_password
+      POSTGRES_DB: rdam_dev
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rdam-backend
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://rdam_user:rdam_password@postgres:5432/rdam_dev?schema=public
+      JWT_SECRET: dev-secret-muy-largo-1234567890
+      JWT_EXPIRATION: 24h
+      FRONTEND_URL: http://localhost:5173
+      API_URL: http://localhost:3000/api
+      STORAGE_PATH: /app/storage
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./storage:/app/storage
+    ports:
+      - "3000:3000"
+    command: npm run start:dev
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rdam-frontend
+    environment:
+      VITE_API_URL: http://localhost:3000/api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    command: npm run dev -- --host

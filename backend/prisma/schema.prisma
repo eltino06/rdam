@@ -1,0 +1,175 @@
+// Prisma Schema para RDAM
+// Base de datos: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum: Tipo de Usuario
+enum TipoUsuario {
+  CIUDADANO
+  INTERNO
+}
+
+// Enum: Rol de Usuario Interno
+enum RolUsuario {
+  CIUDADANO
+  OPERADOR
+  ADMIN
+}
+
+// Enum: Estado de Solicitud
+enum EstadoSolicitud {
+  PENDIENTE_REVISION
+  EN_REVISION
+  APROBADA
+  RECHAZADA
+  PENDIENTE_PAGO
+  PAGADA
+  EMITIDA
+}
+
+// Enum: Estado de Pago
+enum EstadoPago {
+  PENDIENTE
+  EXITOSO
+  FALLIDO
+  CANCELADO
+}
+
+// Modelo: Usuario
+model Usuario {
+  id                String    @id @default(uuid())
+  tipo              TipoUsuario
+  nombreCompleto    String    @map("nombre_completo")
+  email             String    @unique
+  passwordHash      String    @map("password_hash")
+  cuil              String?   @unique
+  rol               RolUsuario @default(CIUDADANO)
+  activo            Boolean   @default(true)
+  fechaRegistro     DateTime  @default(now()) @map("fecha_registro")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  
+  solicitudesCreadas     Solicitud[]  @relation("SolicitudCiudadano")
+  solicitudesRevisadas   Solicitud[]  @relation("SolicitudRevisor")
+  solicitudesEmitidas    Solicitud[]  @relation("SolicitudEmisor")
+  auditoria              Auditoria[]
+  
+  @@index([email])
+  @@index([cuil])
+  @@index([tipo, activo])
+  @@map("usuarios")
+}
+
+// Modelo: Solicitud
+model Solicitud {
+  id                    String           @id @default(uuid())
+  numeroSolicitud       String           @unique @map("numero_solicitud")
+  estado                EstadoSolicitud
+  
+  tipoCertificado       String           @map("tipo_certificado")
+  motivoSolicitud       String           @map("motivo_solicitud") @db.Text
+  datosAdicionales      Json?            @map("datos_adicionales")
+  montoArancel          Decimal          @map("monto_arancel") @db.Decimal(10, 2)
+  
+  ciudadanoId           String           @map("ciudadano_id")
+  ciudadano             Usuario          @relation("SolicitudCiudadano", fields: [ciudadanoId], references: [id])
+  ciudadanoNombre       String           @map("ciudadano_nombre")
+  ciudadanoEmail        String           @map("ciudadano_email")
+  ciudadanoCuil         String           @map("ciudadano_cuil")
+  ciudadanoTelefono     String?          @map("ciudadano_telefono")
+  ciudadanoDomicilio    String?          @map("ciudadano_domicilio") @db.Text
+  
+  internoRevisorId      String?          @map("interno_revisor_id")
+  internoRevisor        Usuario?         @relation("SolicitudRevisor", fields: [internoRevisorId], references: [id])
+  internoRevisorNombre  String?          @map("interno_revisor_nombre")
+  fechaRevision         DateTime?        @map("fecha_revision")
+  fechaAprobacion       DateTime?        @map("fecha_aprobacion")
+  observacionesRechazo  String?          @map("observaciones_rechazo") @db.Text
+  fechaTimeout          DateTime?        @map("fecha_timeout")
+  
+  pagoId                String?          @unique @map("pago_id")
+  pago                  Pago?            @relation(fields: [pagoId], references: [id])
+  pagoFecha             DateTime?        @map("pago_fecha")
+  pagoMetodo            String?          @map("pago_metodo")
+  
+  certificadoPdfUrl     String?          @map("certificado_pdf_url")
+  fechaEmision          DateTime?        @map("fecha_emision")
+  internoEmisorId       String?          @map("interno_emisor_id")
+  internoEmisor         Usuario?         @relation("SolicitudEmisor", fields: [internoEmisorId], references: [id])
+  internoEmisorNombre   String?          @map("interno_emisor_nombre")
+  
+  fechaCreacion         DateTime         @default(now()) @map("fecha_creacion")
+  createdAt             DateTime         @default(now()) @map("created_at")
+  updatedAt             DateTime         @updatedAt @map("updated_at")
+  
+  auditoria             Auditoria[]
+  
+  @@index([estado])
+  @@index([ciudadanoId])
+  @@index([numeroSolicitud])
+  @@index([fechaCreacion(sort: Desc)])
+  @@index([ciudadanoCuil])
+  @@index([internoRevisorId])
+  @@map("solicitudes")
+}
+
+// Modelo: Pago
+model Pago {
+  id                      String      @id @default(uuid())
+  solicitudId             String      @unique @map("solicitud_id")
+  monto                   Decimal     @db.Decimal(10, 2)
+  pluspagosTransactionId  String?     @unique @map("pluspagos_transaction_id")
+  estado                  EstadoPago
+  metodoPago              String?     @map("metodo_pago")
+  datosTransaccion        Json?       @map("datos_transaccion")
+  fechaIntento            DateTime    @default(now()) @map("fecha_intento")
+  fechaConfirmacion       DateTime?   @map("fecha_confirmacion")
+  createdAt               DateTime    @default(now()) @map("created_at")
+  updatedAt               DateTime    @updatedAt @map("updated_at")
+  
+  solicitud               Solicitud?
+  
+  @@index([pluspagosTransactionId])
+  @@index([estado])
+  @@map("pagos")
+}
+
+// Modelo: Auditoría
+model Auditoria {
+  id              String    @id @default(uuid())
+  solicitudId     String?   @map("solicitud_id")
+  solicitud       Solicitud? @relation(fields: [solicitudId], references: [id])
+  usuarioId       String?   @map("usuario_id")
+  usuario         Usuario?  @relation(fields: [usuarioId], references: [id])
+  usuarioNombre   String?   @map("usuario_nombre")
+  accion          String
+  estadoAnterior  String?   @map("estado_anterior")
+  estadoNuevo     String?   @map("estado_nuevo")
+  observaciones   String?   @db.Text
+  ipAddress       String?   @map("ip_address")
+  userAgent       String?   @map("user_agent") @db.Text
+  timestamp       DateTime  @default(now())
+  
+  @@index([solicitudId])
+  @@index([usuarioId])
+  @@index([timestamp(sort: Desc)])
+  @@index([accion])
+  @@map("auditoria")
+}
+
+// Modelo: Configuración
+model Configuracion {
+  clave       String   @id
+  valor       String   @db.Text
+  descripcion String?  @db.Text
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  @@map("configuracion")
+} 
