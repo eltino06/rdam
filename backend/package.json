@@ -2,11 +2,17 @@
   "name": "rdam-backend",
   "version": "1.0.0",
   "scripts": {
+    "start": "node dist/main",
     "start:dev": "nest start --watch",
     "build": "nest build",
     "start:prod": "node dist/main",
+
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
+
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+
     "prisma:seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
