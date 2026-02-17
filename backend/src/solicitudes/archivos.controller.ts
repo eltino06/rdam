@@ -1,6 +1,14 @@
 import {
-  Controller, Post, Get, Delete, Param, UseGuards,
-  Request, UseInterceptors, UploadedFile, BadRequestException
+  Controller,
+  Post,
+  Get,
+  Delete,
+  Param,
+  UseGuards,
+  Request,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -36,12 +44,10 @@ export class ArchivosController {
   constructor(private prisma: PrismaService) {}
 
   @Post(':id/archivos')
-  @UseInterceptors(FileInterceptor('archivo', { storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024 } }))
-  async subirArchivo(
-    @Param('id') id: string,
-    @UploadedFile() file: any,
-    @Request() req: any,
-  ) {
+  @UseInterceptors(
+    FileInterceptor('archivo', { storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024 } }),
+  )
+  async subirArchivo(@Param('id') id: string, @UploadedFile() file: any, @Request() req: any) {
     if (!file) throw new BadRequestException('No se subió ningún archivo');
 
     const solicitud = await this.prisma.solicitud.findUnique({ where: { id } });

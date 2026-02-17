@@ -13,11 +13,7 @@ export class WebhooksController {
 
     try {
       if (payload.event === 'payment.approved') {
-        await this.pagosService.confirmarPago(
-          payload.order_id,
-          payload.transaction_id,
-          payload,
-        );
+        await this.pagosService.confirmarPago(payload.order_id, payload.transaction_id, payload);
       }
 
       return { status: 'received' };

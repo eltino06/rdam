@@ -7,7 +7,7 @@ import {
   Param,
   Query,
   UseGuards,
-  Request
+  Request,
 } from '@nestjs/common';
 import { SolicitudesService } from './solicitudes.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { solicitudesApi } from '../../api/solicitudes.api';
+import { validators } from '../../utils/validators';
+import { AddressAutocomplete } from '../../components/AddressAutocomplete';
 
 export const NuevaSolicitud: React.FC = () => {
   const [tipoCertificado, setTipoCertificado] = useState('');
@@ -13,17 +15,28 @@ export const NuevaSolicitud: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const tiposCertificado = [
-    'Residencia',
-    'Antecedentes',
-    'Nacimiento',
-    'Matrimonio',
-    'Defunción',
-  ];
+  const tiposCertificado = ['Residencia', 'Antecedentes', 'Nacimiento', 'Matrimonio', 'Defunción'];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Validaciones
+    if (ciudadanoTelefono && !validators.isValidPhone(ciudadanoTelefono)) {
+      setError('El teléfono ingresado no es válido. Debe contener al menos 8 números.');
+      return;
+    }
+
+    if (!ciudadanoDomicilio || ciudadanoDomicilio.length < 5) {
+      setError('Por favor seleccioná una dirección válida o escribí al menos 5 caracteres.');
+      return;
+    }
+
+    if (motivoSolicitud.length < 30) {
+      setError(`El motivo es muy breve. Por favor detallá un poco más (mínimo 30 caracteres). Llevas ${motivoSolicitud.length}.`);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -44,39 +57,54 @@ export const NuevaSolicitud: React.FC = () => {
   return (
     <div style={{ minHeight: '100vh', background: '#0f172a' }}>
       {/* Header */}
-      <div style={{
-        background: 'rgba(30, 41, 59, 0.8)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: '20px 40px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+      <div
+        style={{
+          background: 'rgba(30, 41, 59, 0.8)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '1400px',
+            margin: '0 auto',
+            padding: '20px 40px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <div>
-            <h1 style={{ 
-              margin: 0, 
-              fontSize: '24px', 
-              fontWeight: '700',
-              color: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
-                borderRadius: '10px',
+            <h1
+              style={{
+                margin: 0,
+                fontSize: '24px',
+                fontWeight: '700',
+                color: 'white',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                gap: '12px',
+              }}
+            >
+              <div
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="2"
+                >
                   <path d="M3 21h18" />
                   <path d="M9 8h1" />
                   <path d="M9 12h1" />
@@ -86,11 +114,13 @@ export const NuevaSolicitud: React.FC = () => {
               </div>
               RDAM
             </h1>
-            <p style={{ 
-              margin: '5px 0 0 52px', 
-              color: 'rgba(255, 255, 255, 0.6)', 
-              fontSize: '14px',
-            }}>
+            <p
+              style={{
+                margin: '5px 0 0 52px',
+                color: 'rgba(255, 255, 255, 0.6)',
+                fontSize: '14px',
+              }}
+            >
               {user?.nombreCompleto}
             </p>
           </div>
@@ -144,11 +174,13 @@ export const NuevaSolicitud: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div style={{ 
-        maxWidth: '900px', 
-        margin: '0 auto', 
-        padding: '40px',
-      }}>
+      <div
+        style={{
+          maxWidth: '900px',
+          margin: '0 auto',
+          padding: '40px',
+        }}
+      >
         <div style={{ marginBottom: '32px' }}>
           <h2 style={{ margin: 0, color: 'white', fontSize: '28px', fontWeight: '700' }}>
             Nueva Solicitud
@@ -159,48 +191,56 @@ export const NuevaSolicitud: React.FC = () => {
         </div>
 
         {/* Formulario */}
-        <div style={{
-          background: 'rgba(30, 41, 59, 0.6)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: '16px',
-          border: '1px solid rgba(59, 130, 246, 0.2)',
-          padding: '40px',
-        }}>
+        <div
+          style={{
+            background: 'rgba(30, 41, 59, 0.6)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '16px',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+            padding: '40px',
+          }}
+        >
           <form onSubmit={handleSubmit}>
             {error && (
-              <div style={{
-                background: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                color: '#fca5a5',
-                padding: '16px 20px',
-                borderRadius: '12px',
-                marginBottom: '28px',
-                fontSize: '14px',
-                position: 'relative',
-                paddingLeft: '24px',
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  width: '4px',
-                  background: '#ef4444',
-                  borderRadius: '12px 0 0 12px',
-                }}></div>
+              <div
+                style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  color: '#fca5a5',
+                  padding: '16px 20px',
+                  borderRadius: '12px',
+                  marginBottom: '28px',
+                  fontSize: '14px',
+                  position: 'relative',
+                  paddingLeft: '24px',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: '4px',
+                    background: '#ef4444',
+                    borderRadius: '12px 0 0 12px',
+                  }}
+                ></div>
                 {error}
               </div>
             )}
 
             {/* Tipo de Certificado */}
             <div style={{ marginBottom: '24px' }}>
-              <label style={{
-                display: 'block',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: '600',
-                marginBottom: '10px',
-              }}>
+              <label
+                style={{
+                  display: 'block',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  marginBottom: '10px',
+                }}
+              >
                 Tipo de Certificado <span style={{ color: '#f87171' }}>*</span>
               </label>
               <select
@@ -231,7 +271,9 @@ export const NuevaSolicitud: React.FC = () => {
                   e.target.style.boxShadow = 'none';
                 }}
               >
-                <option value="" style={{ background: '#1e293b' }}>Selecciona un tipo</option>
+                <option value="" style={{ background: '#1e293b' }}>
+                  Selecciona un tipo
+                </option>
                 {tiposCertificado.map((tipo) => (
                   <option key={tipo} value={tipo} style={{ background: '#1e293b' }}>
                     {tipo}
@@ -242,13 +284,15 @@ export const NuevaSolicitud: React.FC = () => {
 
             {/* Motivo */}
             <div style={{ marginBottom: '24px' }}>
-              <label style={{
-                display: 'block',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: '600',
-                marginBottom: '10px',
-              }}>
+              <label
+                style={{
+                  display: 'block',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  marginBottom: '10px',
+                }}
+              >
                 Motivo de la Solicitud <span style={{ color: '#f87171' }}>*</span>
               </label>
               <textarea
@@ -282,24 +326,31 @@ export const NuevaSolicitud: React.FC = () => {
                   e.target.style.boxShadow = 'none';
                 }}
               />
+              <div style={{ textAlign: 'right', marginTop: '4px', fontSize: '12px', color: motivoSolicitud.length < 30 ? '#f87171' : 'rgba(255,255,255,0.4)' }}>
+                {motivoSolicitud.length} / 30 caracteres mínimos
+              </div>
             </div>
 
             {/* Grid 2 columnas */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '20px',
-              marginBottom: '32px',
-            }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '20px',
+                marginBottom: '32px',
+              }}
+            >
               {/* Teléfono */}
               <div>
-                <label style={{
-                  display: 'block',
-                  color: 'white',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  marginBottom: '10px',
-                }}>
+                <label
+                  style={{
+                    display: 'block',
+                    color: 'white',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    marginBottom: '10px',
+                  }}
+                >
                   Teléfono de Contacto
                 </label>
                 <input
@@ -334,56 +385,45 @@ export const NuevaSolicitud: React.FC = () => {
 
               {/* Domicilio */}
               <div>
-                <label style={{
-                  display: 'block',
-                  color: 'white',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  marginBottom: '10px',
-                }}>
+                <label
+                  style={{
+                    display: 'block',
+                    color: 'white',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    marginBottom: '10px',
+                  }}
+                >
                   Domicilio
                 </label>
-                <input
-                  type="text"
-                  value={ciudadanoDomicilio}
-                  onChange={(e) => setCiudadanoDomicilio(e.target.value)}
-                  placeholder="Calle 123, Ciudad"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    background: 'rgba(30, 41, 59, 0.5)',
-                    border: '2px solid rgba(59, 130, 246, 0.2)',
-                    borderRadius: '12px',
-                    color: 'white',
-                    fontSize: '15px',
-                    boxSizing: 'border-box',
-                    outline: 'none',
-                    transition: 'all 0.3s',
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.background = 'rgba(30, 41, 59, 0.8)';
-                    e.target.style.borderColor = '#3b82f6';
-                    e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.background = 'rgba(30, 41, 59, 0.5)';
-                    e.target.style.borderColor = 'rgba(59, 130, 246, 0.2)';
-                    e.target.style.boxShadow = 'none';
-                  }}
+                <AddressAutocomplete
+                  onSelect={(val) => setCiudadanoDomicilio(val)}
+                  defaultValue={ciudadanoDomicilio}
                 />
               </div>
             </div>
 
             {/* Info del Arancel */}
-            <div style={{
-              background: 'rgba(59, 130, 246, 0.1)',
-              border: '1px solid rgba(59, 130, 246, 0.3)',
-              borderRadius: '12px',
-              padding: '20px',
-              marginBottom: '32px',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2">
+            <div
+              style={{
+                background: 'rgba(59, 130, 246, 0.1)',
+                border: '1px solid rgba(59, 130, 246, 0.3)',
+                borderRadius: '12px',
+                padding: '20px',
+                marginBottom: '32px',
+              }}
+            >
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#60a5fa"
+                  strokeWidth="2"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <line x1="12" y1="16" x2="12" y2="12" />
                   <line x1="12" y1="8" x2="12.01" y2="8" />
@@ -392,9 +432,17 @@ export const NuevaSolicitud: React.FC = () => {
                   Información del Arancel
                 </p>
               </div>
-              <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px', lineHeight: '1.6' }}>
-                El costo del certificado es de <strong style={{ color: 'white' }}>$5,000 ARS</strong>. 
-                Podrás realizar el pago una vez que tu solicitud sea aprobada.
+              <p
+                style={{
+                  margin: 0,
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                }}
+              >
+                El costo del certificado es de{' '}
+                <strong style={{ color: 'white' }}>$5,000 ARS</strong>. Podrás realizar el pago una
+                vez que tu solicitud sea aprobada.
               </p>
             </div>
 
@@ -430,8 +478,8 @@ export const NuevaSolicitud: React.FC = () => {
                 style={{
                   flex: 2,
                   padding: '16px',
-                  background: isLoading 
-                    ? 'rgba(71, 85, 105, 0.5)' 
+                  background: isLoading
+                    ? 'rgba(71, 85, 105, 0.5)'
                     : 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
                   color: 'white',
                   border: 'none',

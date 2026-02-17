@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../email/email.service';
 
@@ -180,7 +185,9 @@ export class SolicitudesService {
 
   async getDashboardInterno() {
     const total = await this.prisma.solicitud.count();
-    const pendientesRevision = await this.prisma.solicitud.count({ where: { estado: 'PENDIENTE_REVISION' } });
+    const pendientesRevision = await this.prisma.solicitud.count({
+      where: { estado: 'PENDIENTE_REVISION' },
+    });
     const pagadasSinEmitir = await this.prisma.solicitud.count({ where: { estado: 'PAGADA' } });
     const emitidasHoy = await this.prisma.solicitud.count({
       where: {

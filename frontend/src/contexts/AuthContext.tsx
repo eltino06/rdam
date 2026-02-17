@@ -41,7 +41,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string, accessToken?: string, userData?: User): Promise<User> => {
+  const login = async (
+    email: string,
+    password: string,
+    accessToken?: string,
+    userData?: User,
+  ): Promise<User> => {
     // Si ya viene el token y usuario (desde verificar-codigo), los usamos directamente
     if (accessToken && userData) {
       setToken(accessToken);
@@ -70,14 +75,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      token,
-      login,
-      logout,
-      isAuthenticated: !!token && !!user,
-      isLoading,
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        isAuthenticated: !!token && !!user,
+        isLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

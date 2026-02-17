@@ -26,14 +26,16 @@ export const DashboardInterno: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#0f172a',
-        color: 'white',
-      }}>
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#0f172a',
+          color: 'white',
+        }}
+      >
         Cargando...
       </div>
     );
@@ -42,49 +44,73 @@ export const DashboardInterno: React.FC = () => {
   return (
     <div style={{ minHeight: '100vh', background: '#0f172a' }}>
       {/* Header */}
-      <div style={{
-        background: 'rgba(30, 41, 59, 0.8)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: '20px 40px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+      <div
+        style={{
+          background: 'rgba(30, 41, 59, 0.8)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '1400px',
+            margin: '0 auto',
+            padding: '20px 40px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <div>
-            <h1 style={{
-              margin: 0,
-              fontSize: '24px',
-              fontWeight: '700',
-              color: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
-                borderRadius: '10px',
+            <h1
+              style={{
+                margin: 0,
+                fontSize: '24px',
+                fontWeight: '700',
+                color: 'white',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                  <path d="M3 21h18" /><path d="M9 8h1" /><path d="M9 12h1" />
-                  <path d="M14 8h1" /><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17" />
+                gap: '12px',
+              }}
+            >
+              <div
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="2"
+                >
+                  <path d="M3 21h18" />
+                  <path d="M9 8h1" />
+                  <path d="M9 12h1" />
+                  <path d="M14 8h1" />
+                  <path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17" />
                 </svg>
               </div>
               RDAM — Panel Interno
             </h1>
-            <p style={{ margin: '5px 0 0 52px', color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>
+            <p
+              style={{
+                margin: '5px 0 0 52px',
+                color: 'rgba(255, 255, 255, 0.6)',
+                fontSize: '14px',
+              }}
+            >
               {user?.nombreCompleto} · <span style={{ color: '#60a5fa' }}>{user?.rol}</span>
             </p>
           </div>
@@ -102,8 +128,12 @@ export const DashboardInterno: React.FC = () => {
                 fontSize: '14px',
                 transition: 'all 0.3s',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
+              }}
             >
               Ver Solicitudes
             </button>
@@ -120,8 +150,12 @@ export const DashboardInterno: React.FC = () => {
                 fontSize: '14px',
                 transition: 'all 0.3s',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+              }}
             >
               Cerrar Sesión
             </button>
@@ -141,12 +175,14 @@ export const DashboardInterno: React.FC = () => {
         </div>
 
         {/* Stats Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '24px',
-          marginBottom: '40px',
-        }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '24px',
+            marginBottom: '40px',
+          }}
+        >
           {[
             {
               label: 'Total Solicitudes',
@@ -154,7 +190,14 @@ export const DashboardInterno: React.FC = () => {
               color: '#3b82f6',
               border: 'rgba(59, 130, 246, 0.2)',
               icon: (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#3b82f6"
+                  strokeWidth="2"
+                >
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
                 </svg>
@@ -166,7 +209,14 @@ export const DashboardInterno: React.FC = () => {
               color: '#fbbf24',
               border: 'rgba(251, 191, 36, 0.2)',
               icon: (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fbbf24"
+                  strokeWidth="2"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
@@ -178,7 +228,14 @@ export const DashboardInterno: React.FC = () => {
               color: '#34d399',
               border: 'rgba(52, 211, 153, 0.2)',
               icon: (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#34d399"
+                  strokeWidth="2"
+                >
                   <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
                   <line x1="1" y1="10" x2="23" y2="10" />
                 </svg>
@@ -190,53 +247,73 @@ export const DashboardInterno: React.FC = () => {
               color: '#a78bfa',
               border: 'rgba(167, 139, 250, 0.2)',
               icon: (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#a78bfa"
+                  strokeWidth="2"
+                >
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                   <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
               ),
             },
           ].map((stat) => (
-            <div key={stat.label} style={{
-              background: 'rgba(30, 41, 59, 0.6)',
-              backdropFilter: 'blur(20px)',
-              padding: '28px',
-              borderRadius: '16px',
-              border: `1px solid ${stat.border}`,
-              position: 'relative',
-              overflow: 'hidden',
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: 0, left: 0, right: 0,
-                height: '3px',
-                background: stat.color,
-              }}></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+            <div
+              key={stat.label}
+              style={{
+                background: 'rgba(30, 41, 59, 0.6)',
+                backdropFilter: 'blur(20px)',
+                padding: '28px',
+                borderRadius: '16px',
+                border: `1px solid ${stat.border}`,
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '3px',
+                  background: stat.color,
+                }}
+              ></div>
+              <div
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}
+              >
                 <div>
-                  <p style={{
-                    margin: '0 0 8px 0',
-                    color: 'rgba(255,255,255,0.6)',
-                    fontSize: '13px',
-                    fontWeight: '600',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                  }}>
+                  <p
+                    style={{
+                      margin: '0 0 8px 0',
+                      color: 'rgba(255,255,255,0.6)',
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                    }}
+                  >
                     {stat.label}
                   </p>
                   <p style={{ margin: 0, fontSize: '36px', fontWeight: '800', color: stat.color }}>
                     {stat.value}
                   </p>
                 </div>
-                <div style={{
-                  width: '50px',
-                  height: '50px',
-                  background: `${stat.border}`,
-                  borderRadius: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
+                <div
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    background: `${stat.border}`,
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   {stat.icon}
                 </div>
               </div>
@@ -245,21 +322,25 @@ export const DashboardInterno: React.FC = () => {
         </div>
 
         {/* Acciones rápidas */}
-        <div style={{
-          background: 'rgba(30, 41, 59, 0.6)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: '16px',
-          border: '1px solid rgba(59, 130, 246, 0.2)',
-          padding: '32px',
-        }}>
+        <div
+          style={{
+            background: 'rgba(30, 41, 59, 0.6)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '16px',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+            padding: '32px',
+          }}
+        >
           <h3 style={{ margin: '0 0 24px 0', color: 'white', fontSize: '18px', fontWeight: '700' }}>
             Acciones Rápidas
           </h3>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '16px',
-          }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '16px',
+            }}
+          >
             {[
               {
                 label: 'Revisar Pendientes',
@@ -268,8 +349,16 @@ export const DashboardInterno: React.FC = () => {
                 border: 'rgba(251, 191, 36, 0.3)',
                 bg: 'rgba(251, 191, 36, 0.1)',
                 icon: (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fbbf24"
+                    strokeWidth="2"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
                   </svg>
                 ),
               },
@@ -280,7 +369,14 @@ export const DashboardInterno: React.FC = () => {
                 border: 'rgba(52, 211, 153, 0.3)',
                 bg: 'rgba(52, 211, 153, 0.1)',
                 icon: (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#34d399"
+                    strokeWidth="2"
+                  >
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                     <polyline points="14 2 14 8 20 8" />
                   </svg>
@@ -293,28 +389,49 @@ export const DashboardInterno: React.FC = () => {
                 border: 'rgba(59, 130, 246, 0.3)',
                 bg: 'rgba(59, 130, 246, 0.1)',
                 icon: (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2">
-                    <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" />
-                    <line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" />
-                    <line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#60a5fa"
+                    strokeWidth="2"
+                  >
+                    <line x1="8" y1="6" x2="21" y2="6" />
+                    <line x1="8" y1="12" x2="21" y2="12" />
+                    <line x1="8" y1="18" x2="21" y2="18" />
+                    <line x1="3" y1="6" x2="3.01" y2="6" />
+                    <line x1="3" y1="12" x2="3.01" y2="12" />
+                    <line x1="3" y1="18" x2="3.01" y2="18" />
                   </svg>
                 ),
               },
-              ...(user?.rol === 'ADMIN' ? [{
-                label: 'Gestión de Usuarios',
-                path: '/interno/usuarios',
-                color: '#a78bfa',
-                border: 'rgba(167, 139, 250, 0.3)',
-                bg: 'rgba(167, 139, 250, 0.1)',
-                icon: (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                ),
-              }] : []),
+              ...(user?.rol === 'ADMIN'
+                ? [
+                    {
+                      label: 'Gestión de Usuarios',
+                      path: '/interno/usuarios',
+                      color: '#a78bfa',
+                      border: 'rgba(167, 139, 250, 0.3)',
+                      bg: 'rgba(167, 139, 250, 0.1)',
+                      icon: (
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#a78bfa"
+                          strokeWidth="2"
+                        >
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                          <circle cx="9" cy="7" r="4" />
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                      ),
+                    },
+                  ]
+                : []),
             ].map((action) => (
               <button
                 key={action.label}

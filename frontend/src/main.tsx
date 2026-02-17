@@ -19,12 +19,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
         <p>Cargando...</p>
       </div>
     );
@@ -61,21 +63,21 @@ function App() {
             }
           />
           <Route
-  path="/interno/solicitudes/:id"
-  element={
-    <ProtectedRoute>
-      <GestionarSolicitud />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/interno/usuarios"
-  element={
-    <ProtectedRoute>
-      <GestionUsuarios />
-    </ProtectedRoute>
-  }
-/>
+            path="/interno/solicitudes/:id"
+            element={
+              <ProtectedRoute>
+                <GestionarSolicitud />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interno/usuarios"
+            element={
+              <ProtectedRoute>
+                <GestionUsuarios />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/mis-solicitudes"
             element={
@@ -93,21 +95,21 @@ function App() {
             }
           />
           <Route
-  path="/interno/dashboard"
-  element={
-    <ProtectedRoute>
-      <DashboardInterno />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/interno/solicitudes"
-  element={
-    <ProtectedRoute>
-      <TodasSolicitudes />
-    </ProtectedRoute>
-  }
-/>
+            path="/interno/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardInterno />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interno/solicitudes"
+            element={
+              <ProtectedRoute>
+                <TodasSolicitudes />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>

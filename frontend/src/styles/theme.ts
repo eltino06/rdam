@@ -1,9 +1,9 @@
 export const theme = {
   colors: {
     primary: {
-      main: '#1e3a8a',      // Azul oscuro profesional
-      light: '#3b82f6',     // Azul vibrante
-      dark: '#1e293b',      // Azul muy oscuro
+      main: '#1e3a8a', // Azul oscuro profesional
+      light: '#3b82f6', // Azul vibrante
+      dark: '#1e293b', // Azul muy oscuro
       gradient: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
     },
     secondary: {

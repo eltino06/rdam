@@ -12,7 +12,7 @@ export class TasksService {
     private auditoriaService: AuditoriaService,
   ) {}
 
-  @Cron('0 */15 * * * *') 
+  @Cron('0 */15 * * * *')
   async liberarSolicitudesEnRevision() {
     this.logger.log('Ejecutando tarea: liberar solicitudes en revisión con timeout');
 

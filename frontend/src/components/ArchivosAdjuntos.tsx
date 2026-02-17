@@ -9,24 +9,45 @@ interface Archivo {
   fechaSubida: string;
 }
 
+// ... (imports remain)
+
 interface Props {
   solicitudId: string;
   canUpload: boolean;
   estadoSolicitud?: string;
+  allowAlwaysView?: boolean;
 }
 
-export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, estadoSolicitud }) => {
+export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, estadoSolicitud, allowAlwaysView }) => {
   const [archivos, setArchivos] = useState<Archivo[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
-  const [mensaje, setMensaje] = useState<{ tipo: 'success' | 'error', texto: string } | null>(null);
+  const [mensaje, setMensaje] = useState<{ tipo: 'success' | 'error'; texto: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
-    const API_URL = import.meta.env.VITE_API_URL;
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  // Helper para construir la URL correcta evitando doble /api
+  const getFileUrl = (url: string) => {
+    if (url.startsWith('http')) return url;
+
+    // Si la URL del archivo ya empieza con /api y API_URL también termina en /api
+    // necesitamos evitar duplicarlo
+    const baseUrl = API_URL?.replace(/\/api\/?$/, ''); // Quita /api del final si existe
+
+    // Si la url del archivo no tiene /api al principio, usariamos API_URL normal
+    if (!url.startsWith('/api')) {
+      return `${API_URL}/${url.replace(/^\//, '')}`;
+    }
+
+    return `${baseUrl}${url}`;
+  };
 
   useEffect(() => {
     loadArchivos();
   }, [solicitudId]);
+
+  // ... (loadArchivos, handleUpload, handleEliminar, handleDrop logic remains same)
 
   const loadArchivos = async () => {
     try {
@@ -66,7 +87,10 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
       setMensaje({ tipo: 'success', texto: 'Archivo subido correctamente' });
       await loadArchivos();
     } catch (error: any) {
-      setMensaje({ tipo: 'error', texto: error.response?.data?.message || 'Error al subir archivo' });
+      setMensaje({
+        tipo: 'error',
+        texto: error.response?.data?.message || 'Error al subir archivo',
+      });
     } finally {
       setIsUploading(false);
       setTimeout(() => setMensaje(null), 3000);
@@ -94,7 +118,7 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
   };
 
   const isImage = (tipo: string) => tipo.startsWith('image/');
-  const canDownload = !estadoSolicitud || ['PAGADA', 'EMITIDA'].includes(estadoSolicitud);
+  const canDownload = allowAlwaysView || !estadoSolicitud || ['PAGADA', 'EMITIDA', 'RECHAZADA'].includes(estadoSolicitud);
 
   const cardStyle: React.CSSProperties = {
     background: 'rgba(30, 41, 59, 0.6)',
@@ -161,7 +185,14 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
         }}
       ></div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+        }}
+      >
         <h3
           style={{
             margin: 0,
@@ -173,7 +204,14 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
             gap: '10px',
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#60a5fa"
+            strokeWidth="2"
+          >
             <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
           </svg>
           Archivos Adjuntos
@@ -211,7 +249,14 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
               gap: '6px',
             }}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="17 8 12 3 7 8" />
               <line x1="12" y1="3" x2="12" y2="15" />
@@ -229,10 +274,10 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
             fontSize: '13px',
             fontWeight: '600',
             marginBottom: '16px',
-            background: mensaje.tipo === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
-            border: `1px solid ${
-              mensaje.tipo === 'success' ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'
-            }`,
+            background:
+              mensaje.tipo === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+            border: `1px solid ${mensaje.tipo === 'success' ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'
+              }`,
             color: mensaje.tipo === 'success' ? '#34d399' : '#f87171',
           }}
         >
@@ -315,12 +360,19 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
               >
                 {isImage(archivo.tipo) ? (
                   <img
-                    src={`${API_BASE_URL}${archivo.url}`}
+                    src={getFileUrl(archivo.url)}
                     alt={archivo.nombre}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 ) : (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2">
+                  <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#f87171"
+                    strokeWidth="2"
+                  >
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                     <polyline points="14 2 14 8 20 8" />
                   </svg>
@@ -341,20 +393,30 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
                 >
                   {archivo.nombre}
                 </p>
-                <p style={{ margin: '2px 0 0 0', color: 'rgba(255,255,255,0.4)', fontSize: '11px' }}>
-                  {new Date(archivo.fechaSubida).toLocaleDateString('es-AR')} — {isImage(archivo.tipo) ? 'Imagen' : 'PDF'}
+                <p
+                  style={{ margin: '2px 0 0 0', color: 'rgba(255,255,255,0.4)', fontSize: '11px' }}
+                >
+                  {new Date(archivo.fechaSubida).toLocaleDateString('es-AR')} —{' '}
+                  {isImage(archivo.tipo) ? 'Imagen' : 'PDF'}
                 </p>
               </div>
 
               <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                 {canDownload ? (
                   <a
-                    href={`${API_BASE_URL}${archivo.url}`}
+                    href={getFileUrl(archivo.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={btnVerStyle}
                   >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <circle cx="12" cy="12" r="3" />
                       <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
                     </svg>
@@ -369,7 +431,14 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
                     }}
                     title="Disponible después del pago"
                   >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
@@ -379,7 +448,14 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
 
                 {canUpload && (
                   <button onClick={() => handleEliminar(archivo.id)} style={btnEliminarStyle}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <polyline points="3 6 5 6 21 6" />
                       <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
                     </svg>
@@ -393,7 +469,14 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
       )}
 
       {archivos.length === 0 && !canUpload && (
-        <div style={{ textAlign: 'center', padding: '24px', color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>
+        <div
+          style={{
+            textAlign: 'center',
+            padding: '24px',
+            color: 'rgba(255,255,255,0.4)',
+            fontSize: '14px',
+          }}
+        >
           No hay archivos adjuntos en esta solicitud.
         </div>
       )}

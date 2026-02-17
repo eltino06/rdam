@@ -42,7 +42,12 @@ export class MailService {
     });
   }
 
-  async sendSolicitudAprobada(email: string, nombre: string, numeroSolicitud: string, monto: number) {
+  async sendSolicitudAprobada(
+    email: string,
+    nombre: string,
+    numeroSolicitud: string,
+    monto: number,
+  ) {
     await this.transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: email,
@@ -73,7 +78,12 @@ export class MailService {
     });
   }
 
-  async sendSolicitudRechazada(email: string, nombre: string, numeroSolicitud: string, motivo: string) {
+  async sendSolicitudRechazada(
+    email: string,
+    nombre: string,
+    numeroSolicitud: string,
+    motivo: string,
+  ) {
     await this.transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: email,
@@ -104,7 +114,12 @@ export class MailService {
     });
   }
 
-  async sendCertificadoEmitido(email: string, nombre: string, numeroSolicitud: string, tipo: string) {
+  async sendCertificadoEmitido(
+    email: string,
+    nombre: string,
+    numeroSolicitud: string,
+    tipo: string,
+  ) {
     await this.transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: email,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/client';
+import { validators } from '../../utils/validators';
 
 export const Register: React.FC = () => {
   const [form, setForm] = useState({
@@ -15,6 +16,9 @@ export const Register: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
+
+  // ... inside component ...
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -26,6 +30,16 @@ export const Register: React.FC = () => {
 
     if (form.password.length < 8) {
       setError('La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+
+    if (!validators.isValidName(form.nombreCompleto)) {
+      setError('El nombre completo debe tener al menos 3 letras y no contener números o símbolos.');
+      return;
+    }
+
+    if (form.cuil && !validators.isValidCuil(form.cuil)) {
+      setError('El CUIL debe tener 11 dígitos numéricos.');
       return;
     }
 
@@ -47,45 +61,63 @@ export const Register: React.FC = () => {
 
   if (success) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#0f172a',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        padding: '24px',
-      }}>
-        <div style={{
-          width: '100%',
-          maxWidth: '480px',
-          background: 'rgba(30, 41, 59, 0.9)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: '24px',
-          padding: '48px',
-          border: '1px solid rgba(16, 185, 129, 0.3)',
-          textAlign: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-        }}>
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0,
-            height: '3px',
-            background: 'linear-gradient(90deg, #10b981, #34d399)',
-          }}></div>
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#0f172a',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          padding: '24px',
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            maxWidth: '480px',
+            background: 'rgba(30, 41, 59, 0.9)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '24px',
+            padding: '48px',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '3px',
+              background: 'linear-gradient(90deg, #10b981, #34d399)',
+            }}
+          ></div>
 
-          <div style={{
-            width: '80px',
-            height: '80px',
-            background: 'rgba(16, 185, 129, 0.2)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 24px',
-            boxShadow: '0 0 30px rgba(16, 185, 129, 0.3)',
-          }}>
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2">
+          <div
+            style={{
+              width: '80px',
+              height: '80px',
+              background: 'rgba(16, 185, 129, 0.2)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 24px',
+              boxShadow: '0 0 30px rgba(16, 185, 129, 0.3)',
+            }}
+          >
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#34d399"
+              strokeWidth="2"
+            >
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
               <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
@@ -94,7 +126,14 @@ export const Register: React.FC = () => {
           <h2 style={{ margin: '0 0 12px 0', color: 'white', fontSize: '24px', fontWeight: '700' }}>
             ¡Registro exitoso!
           </h2>
-          <p style={{ margin: '0 0 8px 0', color: 'rgba(255,255,255,0.7)', fontSize: '15px', lineHeight: '1.6' }}>
+          <p
+            style={{
+              margin: '0 0 8px 0',
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: '15px',
+              lineHeight: '1.6',
+            }}
+          >
             Tu cuenta fue creada correctamente.
           </p>
           <p style={{ margin: '0 0 32px 0', color: '#34d399', fontSize: '14px' }}>
@@ -133,88 +172,120 @@ export const Register: React.FC = () => {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: '#0f172a',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      padding: '24px',
-    }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '700px',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        background: 'rgba(30, 41, 59, 0.9)',
-        backdropFilter: 'blur(20px)',
-        borderRadius: '24px',
-        overflow: 'hidden',
-        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(59,130,246,0.2)',
-        border: '1px solid rgba(59,130,246,0.2)',
-      }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#0f172a',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        padding: '24px',
+      }}
+    >
+      <div className="auth-card">
         {/* IZQUIERDA - Branding */}
-        <div style={{
-          padding: '40px 32px',
-          background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-        }}>
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `
+        <div className="auth-branding">
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `
               linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
               linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)
             `,
-            backgroundSize: '40px 40px',
-          }}></div>
+              backgroundSize: '40px 40px',
+            }}
+          ></div>
 
-          <div style={{
-            width: '70px',
-            height: '70px',
-            background: 'rgba(255,255,255,0.1)',
-            borderRadius: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: '20px',
-            position: 'relative',
-            zIndex: 1,
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.1) inset',
-          }}>
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-              <path d="M3 21h18" /><path d="M9 8h1" /><path d="M9 12h1" />
-              <path d="M14 8h1" /><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17" />
+          <div
+            style={{
+              width: '70px',
+              height: '70px',
+              background: 'rgba(255,255,255,0.1)',
+              borderRadius: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '20px',
+              position: 'relative',
+              zIndex: 1,
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.1) inset',
+            }}
+          >
+            <svg
+              width="36"
+              height="36"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+            >
+              <path d="M3 21h18" />
+              <path d="M9 8h1" />
+              <path d="M9 12h1" />
+              <path d="M14 8h1" />
+              <path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17" />
             </svg>
           </div>
 
-          <h1 style={{ fontSize: '32px', fontWeight: '900', color: 'white', marginBottom: '12px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+          <h1
+            style={{
+              fontSize: '32px',
+              fontWeight: '900',
+              color: 'white',
+              marginBottom: '12px',
+              textAlign: 'center',
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
             RDAM
           </h1>
-          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.9)', textAlign: 'center', lineHeight: '1.5', position: 'relative', zIndex: 1, fontWeight: '500' }}>
+          <p
+            style={{
+              fontSize: '14px',
+              color: 'rgba(255,255,255,0.9)',
+              textAlign: 'center',
+              lineHeight: '1.5',
+              position: 'relative',
+              zIndex: 1,
+              fontWeight: '500',
+            }}
+          >
             Sistema de Certificados Digitales
           </p>
-          <div style={{ width: '80px', height: '3px', background: 'rgba(255,255,255,0.3)', margin: '16px auto 0', borderRadius: '2px', position: 'relative', zIndex: 1 }}></div>
+          <div
+            style={{
+              width: '80px',
+              height: '3px',
+              background: 'rgba(255,255,255,0.3)',
+              margin: '16px auto 0',
+              borderRadius: '2px',
+              position: 'relative',
+              zIndex: 1,
+            }}
+          ></div>
 
-          <div style={{ marginTop: '32px', position: 'relative', zIndex: 1, width: '100%' }}>
+          <div style={{ marginTop: '32px', position: 'relative', zIndex: 1, width: '100%' }} className="cert-list">
             {['Residencia', 'Antecedentes', 'Nacimiento', 'Matrimonio', 'Defunción'].map((cert) => (
-              <div key={cert} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginBottom: '10px',
-              }}>
-                <div style={{
-                  width: '6px', height: '6px',
-                  borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.6)',
-                }}></div>
+              <div
+                key={cert}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginBottom: '10px',
+                }}
+              >
+                <div
+                  style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.6)',
+                  }}
+                ></div>
                 <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '13px' }}>
                   Certificado de {cert}
                 </span>
@@ -224,7 +295,7 @@ export const Register: React.FC = () => {
         </div>
 
         {/* DERECHA - Formulario */}
-        <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div className="auth-form-container">
           <div style={{ marginBottom: '24px' }}>
             <h2 style={{ margin: 0, color: 'white', fontSize: '20px', fontWeight: '700' }}>
               Crear Cuenta
@@ -236,28 +307,45 @@ export const Register: React.FC = () => {
 
           <form onSubmit={handleSubmit}>
             {error && (
-              <div style={{
-                background: 'rgba(239,68,68,0.1)',
-                border: '1px solid rgba(239,68,68,0.3)',
-                color: '#fca5a5',
-                padding: '12px 16px',
-                borderRadius: '10px',
-                marginBottom: '16px',
-                fontSize: '13px',
-                position: 'relative',
-                paddingLeft: '18px',
-              }}>
-                <div style={{
-                  position: 'absolute', left: 0, top: 0, bottom: 0,
-                  width: '3px', background: '#ef4444', borderRadius: '10px 0 0 10px',
-                }}></div>
+              <div
+                style={{
+                  background: 'rgba(239,68,68,0.1)',
+                  border: '1px solid rgba(239,68,68,0.3)',
+                  color: '#fca5a5',
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  marginBottom: '16px',
+                  fontSize: '13px',
+                  position: 'relative',
+                  paddingLeft: '18px',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: '3px',
+                    background: '#ef4444',
+                    borderRadius: '10px 0 0 10px',
+                  }}
+                ></div>
                 {error}
               </div>
             )}
 
             {/* Nombre */}
             <div style={{ marginBottom: '14px' }}>
-              <label style={{ display: 'block', color: 'rgba(255,255,255,0.9)', fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  marginBottom: '6px',
+                }}
+              >
                 Nombre Completo *
               </label>
               <input
@@ -267,14 +355,28 @@ export const Register: React.FC = () => {
                 placeholder="Juan Carlos Pérez"
                 required
                 style={inputStyle}
-                onFocus={(e) => { e.target.style.borderColor = '#3b82f6'; e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)'; }}
-                onBlur={(e) => { e.target.style.borderColor = 'rgba(59,130,246,0.2)'; e.target.style.boxShadow = 'none'; }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(59,130,246,0.2)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
 
             {/* Email */}
             <div style={{ marginBottom: '14px' }}>
-              <label style={{ display: 'block', color: 'rgba(255,255,255,0.9)', fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  marginBottom: '6px',
+                }}
+              >
                 Email *
               </label>
               <input
@@ -284,14 +386,28 @@ export const Register: React.FC = () => {
                 placeholder="usuario@ejemplo.com"
                 required
                 style={inputStyle}
-                onFocus={(e) => { e.target.style.borderColor = '#3b82f6'; e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)'; }}
-                onBlur={(e) => { e.target.style.borderColor = 'rgba(59,130,246,0.2)'; e.target.style.boxShadow = 'none'; }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(59,130,246,0.2)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
 
             {/* CUIL */}
             <div style={{ marginBottom: '14px' }}>
-              <label style={{ display: 'block', color: 'rgba(255,255,255,0.9)', fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  marginBottom: '6px',
+                }}
+              >
                 CUIL <span style={{ color: 'rgba(255,255,255,0.4)' }}>(opcional)</span>
               </label>
               <input
@@ -300,14 +416,28 @@ export const Register: React.FC = () => {
                 onChange={(e) => setForm({ ...form, cuil: e.target.value })}
                 placeholder="20-12345678-9"
                 style={inputStyle}
-                onFocus={(e) => { e.target.style.borderColor = '#3b82f6'; e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)'; }}
-                onBlur={(e) => { e.target.style.borderColor = 'rgba(59,130,246,0.2)'; e.target.style.boxShadow = 'none'; }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(59,130,246,0.2)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
 
             {/* Password */}
             <div style={{ marginBottom: '14px' }}>
-              <label style={{ display: 'block', color: 'rgba(255,255,255,0.9)', fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  marginBottom: '6px',
+                }}
+              >
                 Contraseña *
               </label>
               <input
@@ -317,14 +447,28 @@ export const Register: React.FC = () => {
                 placeholder="Mínimo 8 caracteres"
                 required
                 style={inputStyle}
-                onFocus={(e) => { e.target.style.borderColor = '#3b82f6'; e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)'; }}
-                onBlur={(e) => { e.target.style.borderColor = 'rgba(59,130,246,0.2)'; e.target.style.boxShadow = 'none'; }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(59,130,246,0.2)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
 
             {/* Confirmar Password */}
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', color: 'rgba(255,255,255,0.9)', fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  marginBottom: '6px',
+                }}
+              >
                 Confirmar Contraseña *
               </label>
               <input
@@ -334,8 +478,14 @@ export const Register: React.FC = () => {
                 placeholder="Repetí la contraseña"
                 required
                 style={inputStyle}
-                onFocus={(e) => { e.target.style.borderColor = '#3b82f6'; e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)'; }}
-                onBlur={(e) => { e.target.style.borderColor = 'rgba(59,130,246,0.2)'; e.target.style.boxShadow = 'none'; }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#3b82f6';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(59,130,246,0.2)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
 
@@ -376,13 +526,24 @@ export const Register: React.FC = () => {
             </button>
 
             {/* Link al login */}
-            <p style={{ margin: 0, textAlign: 'center', color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>
+            <p
+              style={{
+                margin: 0,
+                textAlign: 'center',
+                color: 'rgba(255,255,255,0.5)',
+                fontSize: '13px',
+              }}
+            >
               ¿Ya tenés cuenta?{' '}
               <span
                 onClick={() => navigate('/login')}
                 style={{ color: '#60a5fa', cursor: 'pointer', fontWeight: '600' }}
-                onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none'; }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.textDecoration = 'underline';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.textDecoration = 'none';
+                }}
               >
                 Iniciá sesión
               </span>
@@ -393,6 +554,70 @@ export const Register: React.FC = () => {
 
       <style>{`
         input::placeholder { color: rgba(255,255,255,0.3); }
+
+        .auth-card {
+          width: 100%;
+          max-width: 700px;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          background: rgba(30, 41, 59, 0.9);
+          backdrop-filter: blur(20px);
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(59,130,246,0.2);
+          border: 1px solid rgba(59,130,246,0.2);
+        }
+
+        .auth-branding {
+          padding: 40px 32px;
+          background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .auth-form-container {
+          padding: 32px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .auth-card {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+          }
+
+          .auth-branding {
+            padding: 24px;
+            min-height: 120px;
+          }
+
+          .auth-branding h1 {
+            font-size: 24px !important;
+          }
+
+          .auth-branding svg {
+            width: 24px;
+            height: 24px;
+          }
+          
+          .auth-branding > div:nth-child(2) { /* Logo container */
+             width: 50px !important;
+             height: 50px !important;
+             margin-bottom: 12px !important;
+             border-radius: 14px !important;
+          }
+
+          .cert-list {
+            display: none; /* Opcional: Ocultar lista de certificados en móvil para ahorrar espacio */
+          }
+        }
       `}</style>
     </div>
   );
