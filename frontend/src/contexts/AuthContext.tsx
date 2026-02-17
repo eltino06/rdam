@@ -12,7 +12,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<User>;
+  login: (email: string, password: string, token?: string, userData?: User) => Promise<User>;
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -26,48 +26,42 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('AuthProvider - Inicializando...');
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
-
-    console.log('AuthProvider - Token en localStorage:', storedToken ? 'Existe' : 'No existe');
-    console.log('AuthProvider - User en localStorage:', storedUser ? 'Existe' : 'No existe');
-
     if (storedToken && storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         setToken(storedToken);
         setUser(parsedUser);
-        console.log('AuthProvider - Usuario cargado:', parsedUser);
       } catch (error) {
-        console.error('AuthProvider - Error parseando usuario:', error);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
     }
-
     setIsLoading(false);
-    console.log('AuthProvider - Inicialización completa');
   }, []);
 
-  const login = async (email: string, password: string): Promise<User> => {
-    console.log('AuthContext - Iniciando login');
+  const login = async (email: string, password: string, accessToken?: string, userData?: User): Promise<User> => {
+    // Si ya viene el token y usuario (desde verificar-codigo), los usamos directamente
+    if (accessToken && userData) {
+      setToken(accessToken);
+      setUser(userData);
+      localStorage.setItem('token', accessToken);
+      localStorage.setItem('user', JSON.stringify(userData));
+      return userData;
+    }
+
+    // Login normal (sin 2FA)
     const response = await authApi.login(email, password);
-    const { access_token, user: userData } = response.data;
-
+    const { access_token, user: userDataResponse } = response.data;
     setToken(access_token);
-    setUser(userData);
-
+    setUser(userDataResponse);
     localStorage.setItem('token', access_token);
-    localStorage.setItem('user', JSON.stringify(userData));
-
-    console.log('AuthContext - Login exitoso, usuario guardado:', userData);
-
-    return userData;
+    localStorage.setItem('user', JSON.stringify(userDataResponse));
+    return userDataResponse;
   };
 
   const logout = () => {
-    console.log('AuthContext - Logout');
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
@@ -75,19 +69,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     window.location.href = '/login';
   };
 
-  const contextValue = {
-    user,
-    token,
-    login,
-    logout,
-    isAuthenticated: !!token && !!user,
-    isLoading,
-  };
-
-  console.log('AuthProvider - Render, isAuthenticated:', contextValue.isAuthenticated, 'isLoading:', isLoading);
-
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={{
+      user,
+      token,
+      login,
+      logout,
+      isAuthenticated: !!token && !!user,
+      isLoading,
+    }}>
       {children}
     </AuthContext.Provider>
   );

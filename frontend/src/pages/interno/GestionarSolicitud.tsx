@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import apiClient from '../../api/client';
+import { ArchivosAdjuntos } from '../../components/ArchivosAdjuntos';
+
 
 export const GestionarSolicitud: React.FC = () => {
   const [solicitud, setSolicitud] = useState<any>(null);
@@ -426,7 +428,7 @@ export const GestionarSolicitud: React.FC = () => {
             </div>
           )}
 
-          {['APROBADA', 'RECHAZADA', 'PENDIENTE_PAGO', 'EMITIDA'].includes(solicitud.estado) && (
+         {['APROBADA', 'RECHAZADA', 'PENDIENTE_PAGO', 'EMITIDA'].includes(solicitud.estado) && (
             <div style={{
               padding: '16px 20px',
               background: 'rgba(30, 41, 59, 0.4)',
@@ -439,7 +441,13 @@ export const GestionarSolicitud: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
+
+        {}
+        <ArchivosAdjuntos
+  solicitudId={solicitud.id}
+  canUpload={solicitud.estado === 'EN_REVISION'}
+/>
+      </div> {/* cierre del content */}
 
       {/* Modal Confirmar */}
       {showConfirmModal && (

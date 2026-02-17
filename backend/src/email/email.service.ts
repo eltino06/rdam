@@ -219,4 +219,33 @@ export class EmailService {
     </body>
     </html>`;
   }
+
+  async enviarCodigoVerificacion(usuario: any, codigo: string) {
+    try {
+      await this.transporter.sendMail({
+        from: this.config.get('MAIL_FROM'),
+        to: usuario.email,
+        subject: `🔐 Tu código de acceso RDAM: ${codigo}`,
+        html: this.template({
+          titulo: 'Código de Verificación',
+          color: '#8b5cf6',
+          nombre: usuario.nombreCompleto,
+          contenido: `
+            <p>Tu código de verificación para ingresar al sistema es:</p>
+            <div style="text-align:center;margin:32px 0;">
+              <div style="display:inline-block;background:rgba(139,92,246,0.1);border:2px solid rgba(139,92,246,0.4);border-radius:16px;padding:24px 48px;">
+                <p style="margin:0;color:#a78bfa;font-size:48px;font-weight:900;letter-spacing:12px;">${codigo}</p>
+              </div>
+            </div>
+            <p style="color:#94a3b8;text-align:center;">Este código expira en <strong style="color:white;">10 minutos</strong>.</p>
+            <p style="color:#94a3b8;text-align:center;font-size:13px;">Si no fuiste vos, ignorá este email.</p>
+          `,
+        }),
+      });
+      this.logger.log(`📧 Código de verificación enviado a ${usuario.email}`);
+    } catch (error) {
+      this.logger.error(`❌ Error enviando código: ${error.message}`);
+    }
+    return true;
+  }
 }

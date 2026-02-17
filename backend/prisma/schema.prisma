@@ -110,6 +110,7 @@ model Solicitud {
   updatedAt             DateTime         @updatedAt @map("updated_at")
   
   auditoria             Auditoria[]
+  archivos              ArchivoAdjunto[]
   
   @@index([estado])
   @@index([ciudadanoId])
@@ -173,3 +174,31 @@ model Configuracion {
   
   @@map("configuracion")
 } 
+// Modelo: Código de verificación
+model CodigoVerificacion {
+  id        String   @id @default(uuid())
+  email     String
+  codigo    String
+  usado     Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([email])
+  @@index([codigo])
+  @@map("codigos_verificacion")
+}
+
+// Modelo: Archivo adjunto de solicitud
+model ArchivoAdjunto {
+  id              String   @id @default(uuid())
+  solicitudId     String   @map("solicitud_id")
+  solicitud       Solicitud @relation(fields: [solicitudId], references: [id])
+  nombre          String
+  url             String
+  tipo            String
+  subidoPor       String   @map("subido_por")
+  fechaSubida     DateTime @default(now()) @map("fecha_subida")
+
+  @@index([solicitudId])
+  @@map("archivos_adjuntos")
+}

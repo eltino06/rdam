@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import apiClient from '../../api/client';
+import { ArchivosAdjuntos } from '../../components/ArchivosAdjuntos';
 
 export const DetalleSolicitud: React.FC = () => {
   const [solicitud, setSolicitud] = useState<any>(null);
@@ -458,11 +459,17 @@ export const DetalleSolicitud: React.FC = () => {
             </button>
           </div>
         )}
+
+        <ArchivosAdjuntos
+  solicitudId={solicitud.id}
+  canUpload={false}
+  estadoSolicitud={solicitud.estado}
+/>
+
       </div>
     </div>
   );
 };
-
 function TimelineItem({ title, date, completed, active, color, isRejected = false, isLast = false }: any) {
   return (
     <div style={{ position: 'relative', paddingBottom: isLast ? '0' : '28px' }}>
