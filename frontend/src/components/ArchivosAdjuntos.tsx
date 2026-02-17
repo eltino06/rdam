@@ -21,10 +21,7 @@ export const ArchivosAdjuntos: React.FC<Props> = ({ solicitudId, canUpload, esta
   const [dragOver, setDragOver] = useState(false);
   const [mensaje, setMensaje] = useState<{ tipo: 'success' | 'error', texto: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // 🔥 URL base del backend (sin /api)
-  const API_BASE_URL = 
-
+  
     const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
