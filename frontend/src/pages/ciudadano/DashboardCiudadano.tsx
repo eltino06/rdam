@@ -42,13 +42,14 @@ export const DashboardCiudadano: React.FC = () => {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0f172a' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #203450 0%, #1a2942 100%)' }}>
       {/* Header */}
       <div
         style={{
-          background: 'rgba(30, 41, 59, 0.8)',
+          background: 'linear-gradient(135deg, #2c4a6e 0%, #3a5a7e 100%)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
+          borderBottom: '2px solid #4A90E2',
+          boxShadow: '0 4px 20px rgba(74, 144, 226, 0.3)',
           position: 'sticky',
           top: 0,
           zIndex: 100,
@@ -195,27 +196,31 @@ export const DashboardCiudadano: React.FC = () => {
           <button
             onClick={() => navigate('/solicitudes/nueva')}
             style={{
-              padding: '14px 28px',
-              background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+              padding: '16px 32px',
+              background: 'linear-gradient(135deg, #3a5a7e 0%, #2c4a6e 100%)',
               color: 'white',
-              border: 'none',
+              border: '1px solid rgba(74, 144, 226, 0.3)',
               borderRadius: '12px',
               cursor: 'pointer',
               fontWeight: '700',
-              fontSize: '15px',
-              boxShadow: '0 0 30px rgba(59, 130, 246, 0.4)',
-              transition: 'all 0.3s',
+              fontSize: '16px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '10px',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 0 40px rgba(59, 130, 246, 0.6)';
+              e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
+              e.currentTarget.style.border = '2px solid #4A90E2';
+              e.currentTarget.style.background = 'linear-gradient(135deg, #4A90E2 0%, #3a7bc8 100%)';
+              e.currentTarget.style.boxShadow = '0 20px 60px rgba(74, 144, 226, 0.7), 0 0 80px rgba(74, 144, 226, 0.5)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 0 30px rgba(59, 130, 246, 0.4)';
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.border = '1px solid rgba(74, 144, 226, 0.3)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, #3a5a7e 0%, #2c4a6e 100%)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
             }}
           >
             <svg
@@ -245,13 +250,28 @@ export const DashboardCiudadano: React.FC = () => {
           {/* Card 1 */}
           <div
             style={{
-              background: 'rgba(30, 41, 59, 0.6)',
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.08) 100%)',
               backdropFilter: 'blur(20px)',
               padding: '28px',
               borderRadius: '16px',
-              border: '1px solid rgba(59, 130, 246, 0.2)',
+              border: '1px solid rgba(74, 144, 226, 0.3)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
               position: 'relative',
               overflow: 'hidden',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+              e.currentTarget.style.border = '2px solid #4A90E2';
+              e.currentTarget.style.boxShadow = '0 20px 60px rgba(74, 144, 226, 0.6), 0 0 80px rgba(59, 130, 246, 0.4)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.35) 0%, rgba(37, 99, 235, 0.2) 100%)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.border = '1px solid rgba(74, 144, 226, 0.3)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.08) 100%)';
             }}
           >
             <div
@@ -314,13 +334,28 @@ export const DashboardCiudadano: React.FC = () => {
           {/* Card 2 */}
           <div
             style={{
-              background: 'rgba(30, 41, 59, 0.6)',
+              background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.08) 100%)',
               backdropFilter: 'blur(20px)',
               padding: '28px',
               borderRadius: '16px',
-              border: '1px solid rgba(251, 191, 36, 0.2)',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
               position: 'relative',
               overflow: 'hidden',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+              e.currentTarget.style.border = '2px solid #F59E0B';
+              e.currentTarget.style.boxShadow = '0 20px 60px rgba(245, 158, 11, 0.6), 0 0 80px rgba(251, 191, 36, 0.4)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.35) 0%, rgba(217, 119, 6, 0.2) 100%)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.border = '1px solid rgba(245, 158, 11, 0.3)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.08) 100%)';
             }}
           >
             <div

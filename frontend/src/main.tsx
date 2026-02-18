@@ -13,6 +13,7 @@ import { TodasSolicitudes } from './pages/interno/TodasSolicitudes';
 import { GestionarSolicitud } from './pages/interno/GestionarSolicitud';
 import { GestionUsuarios } from './pages/interno/GestionUsuarios';
 import { Register } from './pages/auth/Register';
+import './styles/global.css';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();

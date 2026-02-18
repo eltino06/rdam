@@ -46,9 +46,10 @@ export const DashboardInterno: React.FC = () => {
       {/* Header */}
       <div
         style={{
-          background: 'rgba(30, 41, 59, 0.8)',
+          background: 'linear-gradient(135deg, #2c4a6e 0%, #3a5a7e 100%)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
+          borderBottom: '2px solid #4A90E2',
+          boxShadow: '0 4px 20px rgba(74, 144, 226, 0.3)',
           position: 'sticky',
           top: 0,
           zIndex: 100,
@@ -264,13 +265,28 @@ export const DashboardInterno: React.FC = () => {
             <div
               key={stat.label}
               style={{
-                background: 'rgba(30, 41, 59, 0.6)',
+                background: `linear-gradient(135deg, ${stat.color}25 0%, ${stat.color}10 100%)`,
                 backdropFilter: 'blur(20px)',
                 padding: '28px',
                 borderRadius: '16px',
-                border: `1px solid ${stat.border}`,
+                border: `1px solid ${stat.color}50`,
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
                 position: 'relative',
                 overflow: 'hidden',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+                e.currentTarget.style.border = `2px solid ${stat.color}`;
+                e.currentTarget.style.boxShadow = `0 20px 60px ${stat.color}90, 0 0 80px ${stat.color}60`;
+                e.currentTarget.style.background = `linear-gradient(135deg, ${stat.color}50 0%, ${stat.color}30 100%)`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.border = `1px solid ${stat.color}50`;
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+                e.currentTarget.style.background = `linear-gradient(135deg, ${stat.color}25 0%, ${stat.color}10 100%)`;
               }}
             >
               <div
@@ -408,29 +424,29 @@ export const DashboardInterno: React.FC = () => {
               },
               ...(user?.rol === 'ADMIN'
                 ? [
-                    {
-                      label: 'Gestión de Usuarios',
-                      path: '/interno/usuarios',
-                      color: '#a78bfa',
-                      border: 'rgba(167, 139, 250, 0.3)',
-                      bg: 'rgba(167, 139, 250, 0.1)',
-                      icon: (
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#a78bfa"
-                          strokeWidth="2"
-                        >
-                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                          <circle cx="9" cy="7" r="4" />
-                          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                        </svg>
-                      ),
-                    },
-                  ]
+                  {
+                    label: 'Gestión de Usuarios',
+                    path: '/interno/usuarios',
+                    color: '#a78bfa',
+                    border: 'rgba(167, 139, 250, 0.3)',
+                    bg: 'rgba(167, 139, 250, 0.1)',
+                    icon: (
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#a78bfa"
+                        strokeWidth="2"
+                      >
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                    ),
+                  },
+                ]
                 : []),
             ].map((action) => (
               <button

@@ -29,9 +29,10 @@ export const MisSolicitudes: React.FC = () => {
       {/* Header */}
       <div
         style={{
-          background: 'rgba(30, 41, 59, 0.8)',
+          background: 'linear-gradient(135deg, #2c4a6e 0%, #3a5a7e 100%)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
+          borderBottom: '2px solid #4A90E2',
+          boxShadow: '0 4px 20px rgba(74, 144, 226, 0.3)',
           position: 'sticky',
           top: 0,
           zIndex: 100,
